@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cool Login</title>
+  <style>
+    :root{
+      --bg1: #0f172a;   /* deep navy */
+      --bg2: #0f766e;   /* teal */
+      --accent: #7c3aed;/* violet */
+      --glass: rgba(255,255,255,0.06);
+      --muted: rgba(255,255,255,0.6);
+      --success: #10b981;
+    }
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    html,body{height:100%;margin:0;background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent 10%),
+      radial-gradient(1000px 500px at 90% 90%, rgba(15,118,110,0.10), transparent 10%),
+      linear-gradient(180deg,var(--bg1), #071024 70%);
+      color: #fff;
+      display:flex;align-items:center;justify-content:center;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    .card{
+      width: 360px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6), 0 1px 0 rgba(255,255,255,0.02) inset;
+      backdrop-filter: blur(6px) saturate(1.1);
+      position:relative;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .logo{
+      display:flex;gap:12px;align-items:center;margin-bottom:12px;
+    }
+    .logo .dot{
+      width:40px;height:40px;border-radius:10px;
+      background: linear-gradient(135deg,var(--accent), var(--bg2));
+      box-shadow: 0 6px 20px rgba(124,58,237,0.18);
+      display:flex;align-items:center;justify-content:center;font-weight:700;
+      transform: rotate(-8deg);
+    }
+    h2{margin:0 0 6px 0;font-size:20px;letter-spacing:0.2px}
+    p.lead{margin:0 0 18px 0;color:var(--muted);font-size:13px}
+
+    form {display:block}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+    .field{
+      margin-bottom:14px;position:relative;
+    }
+    input[type="text"], input[type="password"]{
+      width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      color: #fff;font-size:14px;outline:none;
+      transition: box-shadow .18s, transform .12s;
+    }
+    input:focus{
+      box-shadow: 0 6px 20px rgba(124,58,237,0.14);
+      transform: translateY(-1px);
+      border-color: rgba(124,58,237,0.4);
+    }
+
+    .pw-toggle{
+      position:absolute;right:10px;top:35px;background:none;border:none;color:var(--muted);
+      font-size:13px;cursor:pointer;padding:6px;border-radius:8px;
+    }
+    .row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .checkbox{
+      display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;
+    }
+    .btn{
+      width:100%;padding:12px;border-radius:12px;border:0;font-weight:600;font-size:15px;
+      background: linear-gradient(90deg, var(--accent), var(--bg2));
+      color: white;cursor:pointer;
+      box-shadow: 0 8px 30px rgba(15,118,110,0.12);
+      transition: transform .12s, box-shadow .12s, opacity .12s;
+    }
+    .btn:active{transform: translateY(2px)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed;box-shadow:none}
+
+    .foot{margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
+    .error{color:#ff7b7b;font-size:13px;margin-top:6px}
+    .success-banner{
+      display:none;padding:10px;border-radius:10px;background:rgba(16,185,129,0.12);color:var(--success);
+      font-weight:600;margin-bottom:12px;border:1px solid rgba(16,185,129,0.15)
+    }
+
+    /* small animated accents */
+    .accent-blur{
+      position:absolute;right:-80px;top:-60px;width:260px;height:260px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(124,58,237,0.18), transparent 18%),
+                  radial-gradient(circle at 70% 70%, rgba(15,118,110,0.12), transparent 20%);
+      filter: blur(28px);transform:rotate(10deg);pointer-events:none;
+    }
+
+    @media (max-width:420px){
+      .card{width:92%;padding:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="loginTitle">
+    <div class="accent-blur" aria-hidden="true"></div>
+
+    <div class="logo" aria-hidden="true">
+      <div class="dot">CG</div>
+      <div>
+        <h2 id="loginTitle">CoolGate Login</h2>
+        <p class="lead">Sign in to continue — secure & fast.</p>
+      </div>
+    </div>
+
+    <div id="success" class="success-banner" role="status" aria-live="polite">Logged in successfully ✔</div>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" placeholder="Your username" required />
+        <div id="uErr" class="error" aria-live="polite"></div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6" />
+        <button type="button" class="pw-toggle" id="togglePw" aria-label="Show password">Show</button>
+        <div id="pErr" class="error" aria-live="polite"></div>
+      </div>
+
+      <div class="row">
+        <label class="checkbox"><input id="remember" type="checkbox" /> Remember me</label>
+        <a href="#" id="forgot" style="color:var(--muted);text-decoration:none;font-size:13px;">Forgot?</a>
+      </div>
+
+      <button class="btn" id="submitBtn" type="submit">Sign In</button>
+    </form>
+
+    <div class="foot">Don't have account? <a href="#" style="color:var(--accent);text-decoration:none;">Create one</a></div>
+  </div>
+
+  <script>
+    // simple client-side behaviours
+    const form = document.getElementById('loginForm');
+    const u = document.getElementById('username');
+    const p = document.getElementById('password');
+    const uErr = document.getElementById('uErr');
+    const pErr = document.getElementById('pErr');
+    const success = document.getElementById('success');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggle = document.getElementById('togglePw');
+
+    toggle.addEventListener('click', () => {
+      const isPw = p.type === 'password';
+      p.type = isPw ? 'text' : 'password';
+      toggle.textContent = isPw ? 'Hide' : 'Show';
+      toggle.setAttribute('aria-pressed', isPw ? 'true' : 'false');
+      p.focus();
+    });
+
+    function validateFields(){
+      let ok = true;
+      uErr.textContent = '';
+      pErr.textContent = '';
+
+      if (!u.value.trim()){
+        uErr.textContent = 'Enter username';
+        ok = false;
+      } else if (u.value.trim().length < 3){
+        uErr.textContent = 'Username too short';
+        ok = false;
+      }
+
+      if (!p.value){
+        pErr.textContent = 'Enter password';
+        ok = false;
+      } else if (p.value.length < 6){
+        pErr.textContent = 'Password must be 6+ chars';
+        ok = false;
+      }
+      return ok;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Checking...';
+
+      const ok = validateFields();
+
+      // simulate async check (fake) but immediate in UI
+      setTimeout(() => {
+        if (!ok){
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+          return;
+        }
+
+        // simple fake auth rule: username 'demo' and password 'password' succeed
+        if (u.value.trim().toLowerCase() === 'demo' && p.value === 'password'){
+          success.style.display = 'block';
+          success.textContent = 'Welcome back, ' + u.value.trim() + ' ✔';
+          // visual success then "redirect" (fake)
+          submitBtn.textContent = 'Redirecting...';
+          setTimeout(() => {
+            // pretend redirect - just clear form for demo
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+          }, 1000);
+        } else {
+          pErr.textContent = 'Invalid username or password';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+        }
+      }, 400);
+    });
+
+    // small UX: clear field-specific error when user types
+    [u,p].forEach(el => {
+      el.addEventListener('input', () => {
+        if (el === u) uErr.textContent = '';
+        if (el === p) pErr.textContent = '';
+        success.style.display = 'none';
+      });
+    });
+
+    // accessibility: enter on "Forgot?" opens alert (demo)
+    document.getElementById('forgot').addEventListener('click', (ev) => {
+      ev.preventDefault();
+      alert('Password reset link sent (demo).');
+    });
+  </script>
+</body>
+</html>
